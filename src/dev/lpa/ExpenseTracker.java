@@ -5,19 +5,19 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class ExpenseTracker{
-    private ExpenseFileManager fileManager;
+    private ExpenseRepository repository;
     private ArrayList<Expense>expenses;
 
-    public ExpenseTracker(){
-        fileManager = new ExpenseFileManager();
-        expenses = fileManager.loadExpenses();
+    public ExpenseTracker(ExpenseRepository repository){
+        this.repository = repository;
+        expenses = repository.loadExpenses();
     }
 
     public void addExpense(String category,double amount,String date) {
         Expense e = new Expense(category,amount,date);
         expenses.add(e);
         System.out.println("Expense added with ID " + e.getID());
-        fileManager.saveExpenses(expenses);
+        repository.saveExpenses(expenses);
     }
 
     public void viewExpenses(){
@@ -42,7 +42,7 @@ public class ExpenseTracker{
         }
         if(found){
             System.out.println("Expense with id " + id + "Deleted Successfully.");
-            fileManager.saveExpenses(expenses);
+            repository.saveExpenses(expenses);
         }
         else
             System.out.println("Expense not found");
@@ -68,7 +68,7 @@ public class ExpenseTracker{
                 e.setAmount(newAmount);
                 e.setDate(newDate);
                 System.out.println("Expense updated successfully.");
-                fileManager.saveExpenses(expenses);
+                repository.saveExpenses(expenses);
                 break;
             }
         }

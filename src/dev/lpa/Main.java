@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ExpenseTracker tracker = new ExpenseTracker();
+
+        ExpenseTracker tracker = new ExpenseTracker(new ExpenseFileManager());
         Scanner sc = new Scanner(System.in);
         boolean flag = true;
 

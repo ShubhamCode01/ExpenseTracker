@@ -3,7 +3,9 @@ package dev.lpa;
 import java.io.*;
 import java.util.ArrayList;
 
-public class ExpenseFileManager {
+public class ExpenseFileManager implements ExpenseRepository{
+
+    @Override
     public void saveExpenses(ArrayList<Expense> expenses){
         try(PrintWriter pw = new PrintWriter("expenses.text");){
             for(Expense e : expenses){
@@ -17,6 +19,7 @@ public class ExpenseFileManager {
         }
     }
 
+    @Override
     public ArrayList<Expense> loadExpenses(){
         ArrayList<Expense> expenses =  new ArrayList<>();
         File file = new File("expenses.text");
