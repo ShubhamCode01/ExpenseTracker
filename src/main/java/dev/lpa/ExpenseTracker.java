@@ -1,19 +1,20 @@
 package dev.lpa;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class ExpenseTracker{
     private ExpenseRepository repository;
-    private ArrayList<Expense>expenses;
+    private List<Expense> expenses;
 
     public ExpenseTracker(ExpenseRepository repository){
         this.repository = repository;
         expenses = repository.loadExpenses();
     }
 
-    public void addExpense(String category,double amount,String date) {
+    public void addExpense(String category,double amount,LocalDate date) {
         Expense e = new Expense(category,amount,date);
         expenses.add(e);
         System.out.println("Expense added with ID " + e.getID());
@@ -59,7 +60,7 @@ public class ExpenseTracker{
         return false;
     }
 
-    public void updateExpense(int id,String newCat,double newAmount,String newDate) {
+    public void updateExpense(int id, String newCat, double newAmount, LocalDate newDate) {
 
         for(int i = 0;i < expenses.size();i++){
             Expense e = expenses.get(i);
@@ -81,8 +82,7 @@ public class ExpenseTracker{
         }
         HashMap<String,Double> categoryWiseExpenses = new HashMap<>();
         double totalExpense = 0;
-        Expense x = expenses.get(0);
-        double highestExpense = x.getAmount();
+        double highestExpense = expenses.get(0).getAmount();
         for(Expense e : expenses){
             totalExpense += e.getAmount();
             highestExpense = Math.max(highestExpense,e.getAmount());
@@ -102,12 +102,17 @@ public class ExpenseTracker{
         System.out.println("Average Expense : " + (totalExpense) / expenses.size());
         System.out.println("Highest Expense : " + highestExpense);
         System.out.println("Highest Expense category : " + highestCat);
+
+        System.out.println("Category Breakdown:");
+        for(var entry : categoryWiseExpenses.entrySet()){
+            System.out.printf("%s : %.2f (%.2f%%)%n",entry.getKey(),entry.getValue(),(entry.getValue() / totalExpense) * 100);
+        }
     }
 
     public void searchByCategory(String category){
         boolean flag = false;
         for(Expense e : expenses){
-            if(e.getCategory().equalsIgnoreCase(category)){
+            if(e.getCategory().equals(category)){
                 flag = true;
                 System.out.println("Category : " + e.getCategory() + " Amount : " + e.getAmount() + " Date : " + e.getDate());
             }
@@ -117,10 +122,10 @@ public class ExpenseTracker{
         }
     }
 
-    public void searchByDate(String date){
+    public void searchByDate(LocalDate date){
         boolean flag = false;
         for(Expense e : expenses){
-            if(e.getDate().equalsIgnoreCase(date)){
+            if(e.getDate().equals(date)){
                 flag = true;
                 System.out.println("Category : " + e.getCategory() + " Amount : " + e.getAmount() + " Date : " + e.getDate());
             }

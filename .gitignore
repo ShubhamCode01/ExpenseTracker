@@ -34,3 +34,5 @@ bin/
 
 # Local expense data
 expenses.text
+
+target/

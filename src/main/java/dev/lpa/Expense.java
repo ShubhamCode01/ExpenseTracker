@@ -1,20 +1,22 @@
 package dev.lpa;
 
+import java.time.LocalDate;
+
 public class Expense implements Comparable<Expense>{
     private String category;
     private double amount;
-    private String date;
+    private LocalDate date;
     private int id;
     private static int nextID = 0;
 
-    public Expense(String category,double amount,String date){
+    public Expense(String category,double amount,LocalDate date){
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.id = ++nextID;
     }
 
-    public Expense(int id,String category,double amount,String date){
+    public Expense(int id,String category,double amount,LocalDate date){
         this.id = id;
         this.category = category;
         this.amount = amount;
@@ -34,7 +36,7 @@ public class Expense implements Comparable<Expense>{
         return  amount;
     }
 
-    public String getDate(){
+    public LocalDate getDate(){
         return date;
     }
     public void print(){
@@ -53,7 +55,7 @@ public class Expense implements Comparable<Expense>{
         this.amount = amount;
     }
 
-    public void setDate(String date){
+    public void setDate(LocalDate date){
         this.date = date;
     }
 

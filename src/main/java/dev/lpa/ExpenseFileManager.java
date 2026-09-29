@@ -1,12 +1,14 @@
 package dev.lpa;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExpenseFileManager implements ExpenseRepository{
 
     @Override
-    public void saveExpenses(ArrayList<Expense> expenses){
+    public void saveExpenses(List<Expense> expenses){
         try(PrintWriter pw = new PrintWriter("expenses.text");){
             for(Expense e : expenses){
                 pw.print(e.getID() + "|");
@@ -35,7 +37,7 @@ public class ExpenseFileManager implements ExpenseRepository{
                 int id = Integer.parseInt(parts[0]);
                 String cat = parts[1];
                 double amt = Double.parseDouble(parts[2]);
-                String date = parts[3];
+                LocalDate date = LocalDate.parse(parts[3]);
                 Expense e = new Expense(id,cat,amt,date);
                 expenses.add(e);
             }
