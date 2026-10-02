@@ -3,6 +3,7 @@ package dev.lpa;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -24,65 +25,129 @@ public class Main {
                     double amount = readAmount(sc);
                     sc.nextLine();
                     LocalDate date = readDate(sc);
-                    tracker.addExpense(category, amount, date);
+                    Expense expense = tracker.addExpense(category, amount, date);
+                    System.out.println("Expense added with ID " + expense.getID());
                     break;
 
                 case 2:
-                    tracker.viewExpenses();
+                    List<Expense> allExpenses = tracker.getExpenses();
+                    if(allExpenses.isEmpty()){
+                        System.out.println("No Expenses found");
+                    } else {
+                        for (Expense e : allExpenses) {
+                            System.out.println(e);
+                        }
+                    }
                     break;
 
                 case 3:
                     int id = readID(sc);
-                    tracker.deleteExpense(id);
+                    if (tracker.deleteExpense(id)) {
+                        System.out.println("Expense with id " + id + " deleted successfully.");
+                    } else {
+                        System.out.println("Expense not found.");
+                    }
                     break;
 
                 case 4:
                     id = readID(sc);
                     sc.nextLine();
-                    if (!tracker.isPresent(id)) {
-                        System.out.println("Expense not found.");
+
+                    String newCat = readCategory(sc);
+                    double newAmount = readAmount(sc);
+                    sc.nextLine();
+                    LocalDate newDate = readDate(sc);
+
+                    if (tracker.updateExpense(id, newCat, newAmount, newDate)) {
+                        System.out.println("Expense updated successfully.");
                     } else {
-                        String newCat = readCategory(sc);
-
-                        double newAmount = readAmount(sc);
-                        sc.nextLine();
-
-                        LocalDate newDate = readDate(sc);
-
-                        tracker.updateExpense(id, newCat, newAmount, newDate);
+                        System.out.println("Expense not found.");
                     }
                     break;
 
                 case 5:
-                    tracker.summary();
+                    ExpenseSummary summary = tracker.summary();
+
+                    if (summary == null) {
+                        System.out.println("No Expenses Found.");
+                        break;
+                    }
+
+                    System.out.println("===Expense Summary===");
+                    System.out.println("Total Expense : " + summary.getTotalExpense());
+                    System.out.println("Number of Expenses : " + summary.getNumberOfExpenses());
+                    System.out.println("Average Expense : " + summary.getAverageExpense());
+                    System.out.println("Highest Expense : " + summary.getHighestExpense());
+                    System.out.println("Highest Expense category : " + summary.getHighestExpenseCategory());
+
+                    System.out.println("Category Breakdown:");
+
+                    for (var entry : summary.getCategoryBreakdown().entrySet()) {
+                        System.out.printf(
+                                "%s : %.2f (%.2f%%)%n",
+                                entry.getKey(),
+                                entry.getValue(),
+                                (entry.getValue() / summary.getTotalExpense()) * 100
+                        );
+                    }
                     break;
 
                 case 6:
                     String searchCategory = readCategory(sc);
-                    tracker.searchByCategory(searchCategory);
+                    List<Expense> categoryExpenses = tracker.searchByCategory(searchCategory);
+
+                    if (categoryExpenses.isEmpty()) {
+                        System.out.println("Category not found.");
+                    } else {
+                        for (Expense e : categoryExpenses) {
+                            System.out.println(e);
+                        }
+                    }
                     break;
 
                 case 7:
                     LocalDate searchDate = readDate(sc);
-                    tracker.searchByDate(searchDate);
+                    List<Expense> dateExpenses = tracker.searchByDate(searchDate);
+
+                    if (dateExpenses.isEmpty()) {
+                        System.out.println("Date not found.");
+                    } else {
+                        for (Expense e : dateExpenses) {
+                            System.out.println(e);
+                        }
+                    }
                     break;
 
                 case 8:
-                    tracker.sortByAmount();
+                    for (Expense e : tracker.sortByAmount()) {
+                        System.out.println(e);
+                    }
                     break;
 
                 case 9:
-                    tracker.sortByAmountDescending();
+                    for (Expense e : tracker.sortByAmountDescending()) {
+                        System.out.println(e);
+                    }
                     break;
 
                 case 10:
-                    while(true){
+                    while (true) {
                         double min = readAmount(sc);
                         double max = readAmount(sc);
-                        if(max >= min){
-                            tracker.filterByAmount(min, max);
+
+                        if (max >= min) {
+                            List<Expense> filteredExpenses = tracker.filterByAmount(min, max);
+
+                            if (filteredExpenses.isEmpty()) {
+                                System.out.println("No expenses found in the range.");
+                            } else {
+                                for (Expense e : filteredExpenses) {
+                                    System.out.println(e);
+                                }
+                            }
                             break;
                         }
+
                         System.out.println("Invalid search range.");
                     }
                     break;

@@ -21,7 +21,7 @@ public class Expense implements Comparable<Expense>{
         this.category = category;
         this.amount = amount;
         this.date = date;
-        nextID = id;
+        nextID = Math.max(nextID, id);
     }
 
     public int getID(){
@@ -39,12 +39,12 @@ public class Expense implements Comparable<Expense>{
     public LocalDate getDate(){
         return date;
     }
-    public void print(){
-        System.out.println( "ID : "+ this.id + " Expense Category : " + this.category + " |Expense Amount : " + this.amount + " |Date : " + this.date);
-    }
-
-    public void setId(int id){
-        this.id = id;
+    @Override
+    public String toString() {
+        return "ID : " + id +
+                " Expense Category : " + category +
+                " | Expense Amount : " + amount +
+                " | Date : " + date;
     }
 
     public void setCategory(String category){
